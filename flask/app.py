@@ -41,4 +41,4 @@ def insulter():
 if __name__ == '__main__':
     # Run the Flask application on the local server on port 5005
     # with debug mode enabled.
-    app.run(debug=True, host='0.0.0.0', port=5005)
+    app.run(debug=True, host='0.0.0.0', port=7005)
