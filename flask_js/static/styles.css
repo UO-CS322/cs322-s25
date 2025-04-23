@@ -1,0 +1,30 @@
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  margin-top: 50px;
+}
+
+h1 {
+  color: darkslateblue;
+}
+
+p {
+  font-size: 1.5em;
+  color: darkred;
+  min-height: 2em;
+  /* Ensures space is allocated even before an insult appears */
+}
+
+button {
+  font-size: 1em;
+  padding: 10px 20px;
+  color: white;
+  background-color: darkslateblue;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: slateblue;
+}

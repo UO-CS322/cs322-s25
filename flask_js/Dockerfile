@@ -10,10 +10,10 @@ COPY . /insulter
 WORKDIR /insulter
 
 # Install dependencies
-RUN pip install flask
+RUN pip install -r requirements.txt
 
-# Export port 7007
-EXPOSE 7007
+# Export port 7005
+EXPOSE 7005
 
 # Run the application
 ENTRYPOINT ["python", "app.py"]

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Shakespearean Insult Generator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+  </head>
+  <body>
+    <h1>Shakespearean Insult Generator</h1>
+    <p id="insult">{{ insult }}</p>
+    <button onclick="generateInsult()">Generate Insult</button>
+
+    <script>
+      async function generateInsult() {
+        try {
+          const response = await fetch('/insultme')
+          const html = await response.text()
+          const parser = new DOMParser()
+          const doc = parser.parseFromString(html, 'text/html')
+          const newInsult = doc.getElementById('insult').textContent
+          document.getElementById('insult').textContent = newInsult
+        } catch (error) {
+          console.error('Error fetching insult:', error)
+          document.getElementById('insult').textContent = 'Error generating insult!'
+        }
+      }
+    </script>
+  </body>
+</html>
