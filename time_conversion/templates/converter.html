@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Time Converter</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/arrow@1.3.0/arrow.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  </head>
+
+  <body>
+    <h1>Time Converter</h1>
+
+    <table id="timeTable">
+      <thead>
+        <tr>
+          <th>Local Time</th>
+          <th>UTC Time</th>
+          <th>ISO Format</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <input type="time" class="time-input" />
+          </td>
+          <td class="utc-output"></td>
+          <td class="iso-output"></td>
+        </tr>
+        <tr>
+          <td>
+            <input type="time" class="time-input" />
+          </td>
+          <td class="utc-output"></td>
+          <td class="iso-output"></td>
+        </tr>
+        <tr>
+          <td>
+            <input type="time" class="time-input" />
+          </td>
+          <td class="utc-output"></td>
+          <td class="iso-output"></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <script>
+      // Function to make AJAX request for time conversion
+      function convertTimeAjax(localTimeStr, row) {
+        // Show loading state
+        $(row).find('.utc-output').text('Converting...').removeClass('error')
+        $(row).find('.iso-output').text('Converting...').removeClass('error')
+      
+        // Format the datetime string
+        const today = new Date().toISOString().split('T')[0]
+        const localDateTimeStr = `${today}T${localTimeStr}:00`
+      
+        // Make AJAX request
+        $.ajax({
+          url: '/_convert_times',
+          method: 'GET',
+          data: {
+            local_time: localDateTimeStr
+          },
+          success: function (response) {
+            if (response.error) {
+              // Handle error response
+              $(row).find('.utc-output').text('Error').addClass('error')
+              $(row).find('.iso-output').text('Error').addClass('error')
+              console.error('Error converting time:', response.error)
+            } else {
+              // Update the row with the converted times
+              $(row).find('.utc-output').text(response.utc_time).removeClass('error')
+              $(row).find('.iso-output').text(response.iso_format).removeClass('error')
+            }
+          },
+          error: function (xhr, status, error) {
+            // Handle error
+            $(row).find('.utc-output').text('Error').addClass('error')
+            $(row).find('.iso-output').text('Error').addClass('error')
+            console.error('Error converting time:', error)
+          }
+        })
+      }
+      
+      // Function to update a row's UTC and ISO outputs
+      function updateRow(row) {
+        const timeInput = $(row).find('.time-input')
+        const localTimeStr = timeInput.val()
+      
+        if (localTimeStr) {
+          // Call the AJAX conversion function
+          convertTimeAjax(localTimeStr, row)
+        } else {
+          // Clear outputs if no time is selected
+          $(row).find('.utc-output').text('').removeClass('error')
+          $(row).find('.iso-output').text('').removeClass('error')
+        }
+      }
+      
+      // Add event listeners to all time inputs using jQuery
+      $(document).ready(function () {
+        // Handle time input changes
+        $('.time-input').on('change input', function () {
+          updateRow($(this).closest('tr'))
+        })
+      })
+    </script>
+  </body>
+</html>
