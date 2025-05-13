@@ -29,7 +29,7 @@ In MongoDB, we'll create a database named `duckdb` and a collection named `ducks
 
 ### Step 4: Interact with MongoDB Using Python
 
-Here’s a Python script to insert and retrieve rubber duckies from the MongoDB collection:
+Here's a Python script to insert and retrieve rubber duckies from the MongoDB collection:
 
 
 ```
@@ -119,3 +119,111 @@ ducks is the collection name. Like with databases, it will be created automatica
 * Persistence: The database and collections will persist as long as there is data within them. If you empty a collection or database (by deleting all its documents), MongoDB may remove these from the disk.
 
 By following these steps, you will have a MongoDB database named `duckdb` and a collection named `DuckCollection` as soon as you insert your first document. There's no separate command necessary to create them explicitly in most usage scenarios.
+
+# MongoDB Setup
+
+MongoDB is the database that stores our duck data. Here's how to set it up:
+
+## Using Docker (Recommended)
+
+The easiest way to run MongoDB is with Docker Compose:
+
+```bash
+docker-compose up
+```
+
+This starts MongoDB automatically. No other setup needed.
+
+## Manual Setup
+
+If you want to run MongoDB directly on your computer:
+
+### macOS
+```bash
+# Install
+brew tap mongodb/brew
+brew install mongodb-community
+
+# Start
+brew services start mongodb-community
+
+# Stop when done
+brew services stop mongodb-community
+```
+
+### Linux (Ubuntu/Debian)
+```bash
+# Install
+curl -fsSL https://pgp.mongodb.com/server-7.0.asc | \
+sudo gpg -o /usr/share/keyrings/mongodb-server-7.0.gpg --dearmor
+
+echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/7.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-7.0.list
+
+sudo apt-get update
+sudo apt-get install -y mongodb-org
+
+# Start
+sudo systemctl start mongod
+sudo systemctl enable mongod
+```
+
+### Windows
+1. Download from [MongoDB website](https://www.mongodb.com/try/download/community)
+2. Run installer
+3. MongoDB starts automatically as a Windows service
+
+## Check if MongoDB is Running
+
+```bash
+# Connect to MongoDB
+mongosh
+
+# You should see a prompt like:
+# Current Mongosh Log ID: ...
+# Connecting to: mongodb://127.0.0.1:27017
+# >
+
+# Try a simple command
+> show dbs
+```
+
+## MongoDB Basics
+
+Our app uses these MongoDB commands:
+
+```javascript
+// Show all databases
+show dbs
+
+// Use our database
+use duckdb
+
+// Show all ducks
+db.ducks.find()
+
+// Find a specific duck
+db.ducks.find({name: "Yellow Duck"})
+
+// Add a new duck
+db.ducks.insertOne({
+    name: "Yellow Duck",
+    type: "Rubber",
+    value: "10"
+})
+```
+
+## Troubleshooting
+
+1. Can't connect to MongoDB?
+   - Check if it's running: `mongosh`
+   - On macOS: `brew services list | grep mongodb`
+   - On Linux: `sudo systemctl status mongod`
+   - On Windows: `sc query MongoDB`
+
+2. Port 27017 already in use?
+   - Another MongoDB instance might be running
+   - Stop it or use a different port
+
+3. Permission denied?
+   - On Linux: `sudo systemctl start mongod`
+   - On Windows: Run as Administrator

@@ -1,233 +1,94 @@
-# Rubber Duckies Example
+# Duckies App
 
-This is a simple Flask application with a MongoDB backend that demonstrates basic database operations and web development concepts.
+A Flask app for managing a collection of rubber duckies.
 
-* MongoDB notes: [Mongodb.md](./Mongodb.md)
-* Docker compose notes: [DockerCompose.md](./DockerCompose.md)
+* MongoDB setup: [Mongodb.md](./Mongodb.md)
+* Docker setup: [DockerCompose.md](./DockerCompose.md)
 
-## Project Structure
+## Files
 ```
-├── DockerCompose.md : composes the `web` and `db` services in this example
-├── Dockerfile : Container for the Flask application
-├── app.ini : Configuration used in multiple components (e.g., port)
-├── app.py : Flask application for adding and finding ducks in the database
-├── requirements.txt : required python packages (install in a `venv`)
-├── selenium_test.py : test cases for the application's functionality
-└── templates
-    └── index.html : the web interface with AJAX scripts
+├── app.py : Main Flask app - handles web requests and talks to the database
+├── requirements.txt : Python packages needed to run the app
+├── templates/index.html : The webpage you see in your browser
+└── tests/ : Code that checks if everything works correctly
 ```
 
-## Features
-- Add duckies to the MongoDB database
-- Search for duckies by name
-- Simple and intuitive web interface
-- AJAX-based interactions
-- Docker support for easy deployment
+## What It Does
+- Store duck data in MongoDB (like a digital filing cabinet)
+- Search ducks by name (find your favorite duck)
+- Web interface for adding and finding ducks (no coding needed)
 
-## Testing
-The application includes Selenium tests that demonstrate how to:
-- Test web interfaces programmatically
-- Simulate user interactions
-- Verify database operations
-- Handle AJAX responses
+## Run Locally
+1. Install packages:
+   ```bash
+   pip install -r requirements.txt
+   ```
+2. Start MongoDB (see [Mongodb.md](./Mongodb.md)) - this is where your duck data lives
+3. Run the app:
+   ```bash
+   python app.py
+   ```
+4. Open http://localhost:5005
 
-See `selenium_test.py` for example test cases.
-
-## Getting Started
-1. Install dependencies: `pip install -r requirements.txt`
-2. Start MongoDB
-3. Run the application: `python app.py`
-4. Access the web interface at `http://localhost:5005`
-
-To run the pytests:
+## Run Tests
 ```bash
-(venv) ➜  Duckies git:(main) ✗ pytest tests
-Test session starts (platform: darwin, Python 3.10.15, pytest 7.4.3, pytest-sugar 0.9.7)
-rootdir: /Users/norris/teaching/cs322-s25/mongo/Duckies
-plugins: hypothesis-6.99.11, anyio-4.3.0, cov-4.1.0, xprocess-1.0.2, sugar-0.9.7
+pytest tests
+```
+This checks if everything works as expected in the Flask app (`tests/test_flask.py`) and the Web interface (`tests/test_selenium.py`).
+
+A successful run looks like this:
+```
+...
 collected 7 items                                                                    
 
  tests/test_flask.py ✓✓✓✓✓                                              71% ███████▎  
  tests/test_selenium.py ✓✓                                             100% ██████████
+```
 
-Results (10.73s):
-       7 passed
-``` 
-
-## Docker Support
-The application can be run using Docker Compose:
+## Run with Docker
 ```bash
 docker-compose up
 ```
+This starts both the app and database in containers (like separate computers). Example output:
+```
+[+] Building 10.1s (11/11) FINISHED                                                      docker:desktop-linux
+ => [app internal] load build definition from Dockerfile                                                 0.0s
+ => => transferring dockerfile: 486B                                                                     0.0s
+ => [app internal] load metadata for docker.io/library/python:3.10-slim                                  1.0s
+ => [app internal] load .dockerignore                                                                    0.0s
+ => => transferring context: 2B                                                                          0.0s
+ => [app 1/5] FROM docker.io/library/python:3.10-slim@sha256:e1013c40c02a7875ae30c78c69b68ea7bee31713e8  0.1s
+ => => resolve docker.io/library/python:3.10-slim@sha256:e1013c40c02a7875ae30c78c69b68ea7bee31713e8ac1c  0.1s
+ => [app internal] load build context                                                                    0.8s
+ => => transferring context: 434.98kB                                                                    0.8s
+ => CACHED [app 2/5] WORKDIR /app                                                                        0.0s
+ => CACHED [app 3/5] COPY requirements.txt .                                                             0.0s
+ => CACHED [app 4/5] RUN pip install --no-cache-dir -r requirements.txt                                  0.0s
+ => [app 5/5] COPY . .                                                                                   0.8s
+ => [app] exporting to image                                                                             7.0s
+ => => exporting layers                                                                                  4.9s
+ => => exporting manifest sha256:cc3c4b7dabb31eafda72fc33e889251ad1704e8e0f4d515fb076443767008ecd        0.0s
+ => => exporting config sha256:a59e0f3cf25b9d089ad9e601d307e56fd42ad0654a79292ed40d4561727c4919          0.0s
+ => => exporting attestation manifest sha256:36a2e930024f49d0dbd908b9fdfd8150d1c9535a6d38e47cc9410d36c2  0.0s
+ => => exporting manifest list sha256:8017c4dfadbf58ce05df1bdb7784ac53932e5a21e056dd656ff0945879225291   0.0s
+ => => naming to docker.io/library/duckies-app:latest                                                    0.0s
+ => => unpacking to docker.io/library/duckies-app:latest                                                 2.0s
+ => [app] resolving provenance for metadata file                                                         0.0s
+[+] Running 4/4
+ ✔ app                          Built                                                                    0.0s 
+ ✔ Network duckies_default      Created                                                                  0.2s 
+ ✔ Container duckies-mongodb-1  Created                                                                  0.4s 
+ ✔ Container duckies-app-1      Created                                                                  0.4s 
+Attaching to app-1, mongodb-1
+...
+app-1      |  * Serving Flask app 'app'
+app-1      |  * Debug mode: on
+mongodb-1  | {"t":{"$date":"2025-05-13T03:19:07.288+00:00"},"s":"I",  "c":"WTRECOV",  "id":22430,   "ctx":"initandlisten","msg":"WiredTiger message","attr":{"message":{"ts_sec":1747106347,"ts_usec":288441,"thread":"1:0x7f8352743680","session_name":"txn-recover","category":"WT_VERB_RECOVERY_PROGRESS","category_id":34,"verbose_level":"DEBUG_1","verbose_level_id":1,"msg":"Recovering log 2 through 2"}}}
+app-1      | WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+app-1      |  * Running on all addresses (0.0.0.0)
+app-1      |  * Running on http://127.0.0.1:5005
+app-1      |  * Running on http://172.22.0.3:5005
+app-1      | Press CTRL+C to quit
+..... lots and lots of mongodb logs ....
+```
 
-This will start both the Flask application and MongoDB in separate containers.
-
-## Starting MongoDB
-
-Below are simple instructions for installing MongoDB on macOS and Ubuntu/Debian. For more complete and up to date instructions, see the [official MongoDB documentation](https://www.mongodb.com/docs/manual/installation/).
-
-### macOS
-1. Install MongoDB using Homebrew:
-   ```bash
-   brew tap mongodb/brew
-   brew install mongodb-community
-   ```
-2. Start MongoDB service:
-   ```bash
-   brew services start mongodb-community
-   ```
-3. Stop MongoDB service (when needed):
-   ```bash
-   brew services stop mongodb-community
-   ```
-4. Check if MongoDB is running:
-   ```bash
-   brew services list | grep mongodb
-   # Should show "started" status
-   
-   # Or connect to MongoDB shell to verify:
-   mongosh
-   # If connection is successful, MongoDB is running
-   ```
-
-### Linux (Ubuntu/Debian)
-1. Import MongoDB public GPG key:
-   ```bash
-   curl -fsSL https://pgp.mongodb.com/server-7.0.asc | \
-   sudo gpg -o /usr/share/keyrings/mongodb-server-7.0.gpg \
-   --dearmor
-   ```
-2. Create list file for MongoDB:
-   ```bash
-   echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/7.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-7.0.list
-   ```
-3. Update package database:
-   ```bash
-   sudo apt-get update
-   ```
-4. Install MongoDB:
-   ```bash
-   sudo apt-get install -y mongodb-org
-   ```
-5. Start MongoDB:
-   ```bash
-   sudo systemctl start mongod
-   ```
-6. Enable MongoDB to start on boot:
-   ```bash
-   sudo systemctl enable mongod
-   ```
-7. Check if MongoDB is running:
-   ```bash
-   # Check service status
-   sudo systemctl status mongod
-   # Should show "active (running)"
-   
-   # Or connect to MongoDB shell to verify:
-   mongosh
-   # If connection is successful, MongoDB is running
-   ```
-
-### Windows
-1. Download MongoDB Community Server from the [official website](https://www.mongodb.com/try/download/community)
-2. Run the installer and follow the installation wizard
-3. MongoDB will be installed as a Windows service and will start automatically
-4. Check if MongoDB is running:
-   ```bash
-   # Open Command Prompt as Administrator and check service status:
-   sc query MongoDB
-   # Should show "RUNNING" state
-   
-   # Or connect to MongoDB shell to verify:
-   "C:\Program Files\MongoDB\Server\7.0\bin\mongosh.exe"
-   # If connection is successful, MongoDB is running
-   ```
-
-### Verifying MongoDB Connection
-Regardless of your operating system, you can verify MongoDB is running by:
-1. Opening a terminal/command prompt
-2. Running the MongoDB shell:
-   ```bash
-   mongosh
-   ```
-3. If you see a prompt like this, MongoDB is running:
-   ```
-   Current Mongosh Log ID: ...
-   Connecting to:          mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.1.1
-   Using MongoDB:          7.0.x
-   Using Mongosh:          2.1.1
-   ...
-   >
-   ```
-4. Try a simple command to verify the connection:
-   ```bash
-   > show dbs
-   ```
-
-### Docker Compose Help
-
-### Official Documentation
-For detailed installation and configuration instructions, refer to the official MongoDB documentation:
-- [Install MongoDB Community Edition](https://www.mongodb.com/docs/manual/installation/)
-- [Install MongoDB on macOS](https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-os-x/)
-- [Install MongoDB on Ubuntu](https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-ubuntu/)
-- [Install MongoDB on Windows](https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-windows/)
-
-# Duckies Application
-
-A Flask application for managing a collection of rubber ducks, with MongoDB as the database.
-
-## Prerequisites
-
-- Docker Desktop for Mac
-- Homebrew (for installing Docker)
-
-## Installation
-
-1. Install Docker Desktop using Homebrew:
-   ```bash
-   brew install --cask docker
-   ```
-
-2. Start Docker Desktop:
-   - Open Docker Desktop from your Applications folder
-   - Wait for Docker to start (you'll see the whale icon in your menu bar)
-
-## Running the Application
-
-1. Build and start the containers:
-   ```bash
-   docker-compose up --build
-   ```
-
-2. The application will be available at:
-   - Web interface: http://localhost:5005
-   - MongoDB: mongodb://localhost:27017
-
-## Development
-
-- The application code is in `app.py`
-- MongoDB data is persisted in a Docker volume
-
-## Additional Resources
-
-- [Docker Desktop for Mac Documentation](https://docs.docker.com/desktop/mac/)
-- [Docker Compose Documentation](https://docs.docker.com/compose/)
-- [MongoDB Docker Image](https://hub.docker.com/_/mongo)
-- [Flask Documentation](https://flask.palletsprojects.com/)
-- [Selenium Documentation](https://selenium-python.readthedocs.io/)
-
-## Troubleshooting
-
-1. If you get a port conflict:
-   - Check if another service is using port 5005
-   - Modify the port in `docker-compose.yml` if needed
-
-2. If MongoDB connection fails:
-   - Ensure Docker Desktop is running
-   - Check if the MongoDB container is running: `docker-compose ps`
-   - View logs: `docker-compose logs mongodb`
-
-3. For Selenium test issues:
-   - Check Chrome and ChromeDriver versions match
-   - View test logs: `docker-compose logs app`

@@ -4,16 +4,13 @@ Docker Compose lets you run multiple containers together. For our Duckies app, w
 1. A Flask web app
 2. A MongoDB database
 
-## Basic Commands
+## Run the App
 
 ```bash
-# Start everything
+# Start the app and database
 docker-compose up
 
-# Start in background
-docker-compose up -d
-
-# Stop everything
+# Stop everything when you're done
 docker-compose down
 
 # View logs
@@ -23,9 +20,9 @@ docker-compose logs
 docker-compose up --build
 ```
 
-## How It Works
+## What's Happening
 
-Our `docker-compose.yml` defines two services:
+Our `docker-compose.yml` runs two things:
 
 ```yaml
 services:
@@ -46,25 +43,32 @@ services:
       - mongodb
 ```
 
-- `mongodb`: Uses the official MongoDB image
-- `app`: Builds from our Dockerfile
-- `ports`: Maps container ports to your machine
-- `volumes`: Persists MongoDB data
-- `environment`: Sets connection string for MongoDB
+- The Flask app runs on http://localhost:5005
+- MongoDB runs on port 27017
+- Your data stays in the `mongodb_data` volume
 
-## Key Concepts
+## Useful Commands
 
-1. **Services**: Each container is a service (mongodb, app)
-2. **Networking**: Services can talk using service names
-3. **Volumes**: Persistent data storage
-4. **Environment**: Configuration via environment variables
+```bash
+# Start in background
+docker-compose up -d
 
-## Common Issues
+# See what's happening
+docker-compose logs
 
-1. **Port conflicts**: Change port numbers in `docker-compose.yml`
-2. **Connection issues**: Check service names match
-3. **Data persistence**: Data in volumes survives container restarts
+# Rebuild after changes
+docker-compose up --build
+```
 
-## Learn More
+## If Something's Wrong
 
-- [Docker Compose Documentation](https://docs.docker.com/compose/)
+1. Port 5005 already in use? Change it in `docker-compose.yml`
+2. Can't connect to MongoDB? Check if both containers are running:
+   ```bash
+   docker-compose ps
+   ```
+3. Lost your data? It's in the `mongodb_data` volume
+
+## More Info
+
+- [Docker Compose docs](https://docs.docker.com/compose/)
