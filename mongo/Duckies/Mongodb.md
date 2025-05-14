@@ -212,6 +212,23 @@ db.ducks.insertOne({
 })
 ```
 
+### Example `mongosh` commands
+
+- List all ducks:
+```bash
+mongosh duckdb --eval 'db.ducks.find()'
+```
+
+- Add a new duck:
+```bash
+mongosh duckdb --eval 'db.ducks.insertOne({name: "Yellow Duck", type: "Rubber", value: "100"})'
+```gitup
+
+- Remove ducks named 'Test Duck':
+```bash 
+mongosh duckdb --eval 'db.ducks.deleteMany({name: "Test Duck"})'
+```
+
 ## Troubleshooting
 
 1. Can't connect to MongoDB?

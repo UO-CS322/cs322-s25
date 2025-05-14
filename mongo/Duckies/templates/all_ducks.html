@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>All Ducks - Duck Collection</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 600px;
+        margin: 20px auto;
+        padding: 0 20px;
+      }
+      h1 {
+        margin-bottom: 20px;
+      }
+      .duck-item {
+        margin: 10px 0;
+        padding: 10px;
+        background: #f5f5f5;
+      }
+      .back-link {
+        display: inline-block;
+        margin-bottom: 20px;
+        color: #0066cc;
+      }
+    </style>
+  </head>
+  <body>
+    <a href="/" class="back-link">← Back to Home</a>
+    <h1>All Ducks</h1>
+    <div id="duckList">Loading ducks...</div>
+
+    <script>
+      $(document).ready(function () {
+        $.ajax({
+          url: '/all_ducks',
+          type: 'GET',
+          success: function (response) {
+            const duckList = $('#duckList')
+            if (response.success && response.ducks.length > 0) {
+              let html = ''
+              response.ducks.forEach((duck) => {
+                html += `
+                              <div class="duck-item">
+                                ${duck.name} (${duck.type}) - Value: ${duck.value}
+                              </div>
+                            `
+              })
+              duckList.html(html)
+            } else {
+              duckList.html('No ducks found in the database.')
+            }
+          },
+          error: function () {
+            $('#duckList').html('Error loading ducks. Please try again later.')
+          }
+        })
+      })
+    </script>
+  </body>
+</html>

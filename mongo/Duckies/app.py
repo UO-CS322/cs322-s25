@@ -35,19 +35,8 @@ class DuckApp:
             # Get duck data from request
             duck = request.get_json()
 
-            # Validate required fields
-            required_fields = ["name", "type", "value"]
-            missing_fields = [field for field in required_fields if field not in duck]
-
-            if missing_fields:
-                return (
-                    jsonify(
-                        {
-                            "message": f"Missing required fields: {', '.join(missing_fields)}"
-                        }
-                    ),
-                    400,
-                )
+            # Remove test_marker from the duck data before storing
+            duck.pop("test_marker", None)
 
             # Add duck to database
             self.collection.insert_one(duck)
@@ -70,7 +59,15 @@ class DuckApp:
 
             return jsonify({"message": "Duck not found"}), 404
 
-    def run(self, host="0.0.0.0", port=5005, debug=True):
+        @self.app.route("/all_ducks", methods=["GET"])
+        def all_ducks():
+            ducks = list(self.collection.find())
+            # Convert ObjectId to string for each duck
+            for duck in ducks:
+                duck["_id"] = str(duck["_id"])
+            return jsonify({"success": True, "ducks": ducks})
+
+    def run(self, host="0.0.0.0", port=6006, debug=True):
         """Run the Flask application"""
         self.app.run(host=host, port=port, debug=debug)
 

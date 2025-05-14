@@ -84,13 +84,21 @@ def base_url(flask_app):
     return f"http://localhost:{flask_app.test_port}"
 
 
+@pytest.fixture(autouse=True)
+def cleanup_database(flask_app):
+    """Clean up test data after each test"""
+    yield
+    # Delete only test ducks (those with names starting with TEST_)
+    flask_app.collection.delete_many({"name": {"$regex": "^TEST_"}})
+
+
 def test_add_duck(page: Page, base_url):
     """Test adding a duck through the web interface"""
     # Go to the home page
     page.goto(base_url)
 
     # Fill in the duck details
-    page.fill("#duckName", "Test Duck")
+    page.fill("#duckName", "TEST_Duck")
     page.fill("#duckType", "Rubber")
     page.fill("#duckValue", "10")
 
@@ -107,12 +115,12 @@ def test_find_duck(page: Page, base_url):
     page.goto(base_url)
 
     # Search for the duck we just added
-    page.fill("#searchName", "Test Duck")
+    page.fill("#searchName", "TEST_Duck")
     page.click("#searchDuckButton")
 
     # Wait for and verify search results
     result = page.locator("#searchResult")
-    expect(result).to_contain_text("Test Duck")
+    expect(result).to_contain_text("TEST_Duck")
     expect(result).to_contain_text("Rubber")
     expect(result).to_contain_text("10")
 
@@ -123,7 +131,7 @@ def test_clear_search(page: Page, base_url):
     page.goto(base_url)
 
     # Search for a duck
-    page.fill("#searchName", "Test Duck")
+    page.fill("#searchName", "TEST_Duck")
     page.click("#searchDuckButton")
 
     # Clear the search
