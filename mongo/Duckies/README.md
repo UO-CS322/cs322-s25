@@ -28,7 +28,7 @@ A Flask app for managing a collection of rubber duckies.
    ```bash
    python app.py
    ```
-4. Open http://localhost:5005
+4. Open http://localhost:6006
 
 ## Run Tests
 ```bash

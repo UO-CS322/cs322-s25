@@ -14,14 +14,14 @@ class DuckApp:
         if test_mode:
             # Use test database for testing
             self.client = MongoClient("localhost", 27017)
-            self.db = self.client["test_duckdb"]
-            self.collection = self.db["test_ducks"]
+            self.db = self.client.test_duckdb
+            self.collection = self.db.test_ducks
         else:
             # Use production database (in docker compose)
             mongodb_uri = os.environ.get("MONGODB_URI", "mongodb://localhost:27017")
             self.client = MongoClient(mongodb_uri)
-            self.db = self.client["duckdb"]
-            self.collection = self.db["ducks"]
+            self.db = self.client.duckdb
+            self.collection = self.db.ducks
 
     def setup_routes(self):
         """Set up Flask routes"""
