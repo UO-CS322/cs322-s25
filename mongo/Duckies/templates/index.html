@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Duck Collection Example</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      .section {
+        margin-bottom: 30px;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+      }
+      input {
+        margin: 5px;
+        padding: 5px;
+      }
+      button {
+        margin: 5px;
+        padding: 5px 10px;
+      }
+      #result {
+        margin-top: 10px;
+        padding: 10px;
+        border: 1px solid #ccc;
+      }
+      .note {
+        color: #666;
+        font-style: italic;
+        margin-top: 10px;
+      }
+      .duck-item {
+        margin: 5px 0;
+        padding: 5px;
+        border-bottom: 1px solid #eee;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Duck Collection Example</h1>
+    <p class="note">This is a simple example showing how to interact with MongoDB using Flask and AJAX.</p>
+
+    <!-- Add Duck Section -->
+    <div class="section">
+      <h2>Add a Duck</h2>
+      <p class="note">Try adding different types of ducks to see how MongoDB stores them.</p>
+      <input type="text" id="duckName" placeholder="Duck Name" />
+      <input type="text" id="duckType" placeholder="Type" />
+      <input type="text" id="duckValue" placeholder="Value" />
+      <button id="addDuckButton">Add Duck</button>
+      <div id="addResult"></div>
+    </div>
+
+    <!-- Find Duck Section -->
+    <div class="section">
+      <h2>Find a Duck</h2>
+      <p class="note">Search for ducks by name to see how MongoDB queries work.</p>
+      <input type="text" id="searchName" placeholder="Duck Name" />
+      <button id="searchDuckButton">Find Duck</button>
+      <button id="clearSearch">Clear</button>
+      <div id="searchResult"></div>
+    </div>
+
+    <div class="section">
+      <h2>All Ducks</h2>
+      <button type="button" id="displayAllButton">Display All Ducks</button>
+      <div id="allDucksResult"></div>
+    </div>
+
+    <script>
+      // Add a Duck
+      $('#addDuckButton').click(function () {
+        const duck = {
+          name: $('#duckName').val(),
+          type: $('#duckType').val(),
+          value: $('#duckValue').val()
+        }
+      
+        $.ajax({
+          url: '/add_duck',
+          type: 'POST',
+          contentType: 'application/json',
+          data: JSON.stringify(duck),
+          success: function (response) {
+            $('#addResult').text(response.message + ' 🦆')
+      
+            // Clear the input fields upon successful addition
+            $('#duckName').val('')
+            $('#duckType').val('')
+            $('#duckValue').val('')
+          },
+          error: function () {
+            $('#addResult').text('Error adding duck')
+          }
+        })
+      })
+      
+      // Find a Duck
+      $('#searchDuckButton').click(function () {
+        const name = $('#searchName').val()
+        $.ajax({
+          url: '/find_duck',
+          type: 'GET',
+          data: { name: name },
+          success: function (duck) {
+            $('#searchResult').text(`Found: ${duck.name} (Type: ${duck.type}, Value: ${duck.value})`)
+          },
+          error: function () {
+            $('#searchResult').text('Duck not found')
+          }
+        })
+      })
+      
+      // Clear search results
+      $('#clearSearch').click(function () {
+        $('#searchName').val('')
+        $('#searchResult').text('')
+      })
+      
+      // Display All Ducks
+      $('#displayAllButton').click(function () {
+        $.ajax({
+          url: '/all_ducks',
+          type: 'GET',
+          success: function (response) {
+            const resultDiv = $('#allDucksResult')
+            if (response.success && response.ducks.length > 0) {
+              let html = '<h3>All Ducks:</h3>'
+              response.ducks.forEach((duck) => {
+                html += `<div class="duck-item">${duck.name} (${duck.type}) - Value: ${duck.value}</div>`
+              })
+              resultDiv.html(html)
+            } else {
+              resultDiv.text('No ducks found in the database.')
+            }
+          },
+          error: function () {
+            $('#allDucksResult').text('Error loading ducks')
+          }
+        })
+      })
+    </script>
+  </body>
+</html>

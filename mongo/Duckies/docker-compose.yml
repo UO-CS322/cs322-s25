@@ -1,0 +1,40 @@
+# Docker Compose version - defines the format and features we can use
+version: '3.8'
+
+# Define the services (containers) that make up our application
+services:
+  # MongoDB service - our database
+  mongodb:
+    # Use the official MongoDB image from Docker Hub
+    image: mongo:latest
+    # Port mapping format: "HOST_PORT:CONTAINER_PORT"
+    # - HOST_PORT (27017): The port on your computer where you can access MongoDB
+    # - CONTAINER_PORT (27017): The port inside the container where MongoDB runs
+    ports:
+      - "27017:27017"
+    # Create a named volume to persist database data between container restarts
+    volumes:
+      - mongodb_data:/data/db
+
+  # Flask application service
+  app:
+    # Build the app container from the Dockerfile in the current directory
+    build: .
+    # Port mapping format: "HOST_PORT:CONTAINER_PORT"
+    # - HOST_PORT (6006): The port on your computer where you can access the Flask app
+    # - CONTAINER_PORT (6006): The port inside the container where Flask runs
+    ports:
+      - "6006:6006"
+    # Set environment variables for the Flask app
+    environment:
+      # Connect to MongoDB using the service name as hostname
+      - MONGODB_URI=mongodb://mongodb:27017/
+    # Ensure the app starts after MongoDB is ready
+    depends_on:
+      - mongodb
+
+# Define named volumes for data persistence
+volumes:
+  # Volume for MongoDB data - persists even if containers are removed
+  mongodb_data:
+
