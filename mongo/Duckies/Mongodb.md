@@ -212,7 +212,7 @@ db.ducks.insertOne({
 })
 ```
 
-### Example `mongosh` commands
+### Example `mongosh` commands 
 
 - List all ducks:
 ```bash
