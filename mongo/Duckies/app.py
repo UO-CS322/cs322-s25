@@ -34,6 +34,7 @@ class DuckApp:
         def add_duck():
             # Get duck data from request
             duck = request.get_json()
+            print(duck)
 
             # Remove test_marker from the duck data before storing
             duck.pop("test_marker", None)

@@ -103,6 +103,8 @@ def test_search_duck(web_driver, flask_app):  # type: ignore
 
     # Fill in the search form
     web_driver.find_element(By.ID, "searchName").send_keys("Test Duck")
+    web_driver.find_element(By.ID, "duckType").send_keys("Rubber")
+    web_driver.find_element(By.ID, "duckValue").send_keys("10")
 
     # Click the search button
     web_driver.find_element(By.ID, "searchDuckButton").click()

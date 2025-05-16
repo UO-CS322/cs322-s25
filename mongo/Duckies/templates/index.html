@@ -55,7 +55,7 @@
       <input type="text" id="duckType" placeholder="Type" />
       <input type="text" id="duckValue" placeholder="Value" />
       <button id="addDuckButton">Add Duck</button>
-      <div id="addResult"></div>
+      <div id="addDuckStatus"></div>
     </div>
 
     <!-- Find Duck Section -->
@@ -89,7 +89,7 @@
           contentType: 'application/json',
           data: JSON.stringify(duck),
           success: function (response) {
-            $('#addResult').text(response.message + ' 🦆')
+            $('#addDuckStatus').text(response.message + ' 🦆')
       
             // Clear the input fields upon successful addition
             $('#duckName').val('')
@@ -97,7 +97,7 @@
             $('#duckValue').val('')
           },
           error: function () {
-            $('#addResult').text('Error adding duck')
+            $('#addDuckStatus').text('Error adding duck')
           }
         })
       })
