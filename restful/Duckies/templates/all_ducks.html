@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>All Ducks - Duck Collection</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 600px;
+        margin: 20px auto;
+        padding: 0 20px;
+      }
+      h1 {
+        margin-bottom: 20px;
+      }
+      .back-link {
+        display: inline-block;
+        margin-bottom: 20px;
+        color: #0066cc;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        padding: 8px;
+        border: 1px solid #ddd;
+        text-align: left;
+      }
+      th {
+        background: #f0f0f0;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>All Ducks</h1>
+    <table id="ducksTable">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for duck in ducks %}
+          <tr>
+            <td>{{ duck.name }}</td>
+            <td>{{ duck.type }}</td>
+            <td>{{ duck.value }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <a href="/" class="back-link">Back to Home</a>
+  </body>
+</html>
