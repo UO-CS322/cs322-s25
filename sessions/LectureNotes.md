@@ -84,7 +84,7 @@ These are the different types of attacks that can be used to compromise session 
 *   **Cross-Site Scripting (XSS):**  Injecting malicious JavaScript into a website to steal cookies or redirect users to phishing sites. *XSS is a major threat to session security.*
     *   *Example:* An attacker injects a script into a forum post that steals the cookies of anyone who views the post.
 *   **Exhaustive Search:** Trying all possible session IDs until a valid one is found.  *(Only feasible if session IDs are weak.)*
-    *   *Example:* An attacker writes a script that repeatedly sends requests with different session IDs until it finds a valid session.
+    *   *Example:* An attacker writes a script that repeatedly sends requests with different session IDs until it finds a valid session. Then they have access to all associated data.
 *   **Intelligent Manipulation of Session Data:**  Tampering with session data to gain unauthorized access.
     *   *Example:* An attacker modifies a cookie to change their user role from "guest" to "admin".
 *   **Network Manipulation:**  Redirecting traffic or modifying DNS entries to intercept session information.
@@ -272,10 +272,6 @@ It's often necessary to manually modify cookies or hidden fields for testing pur
 2.  **Edit:** Use the extension to modify the value of a non-critical cookie on a website.
 3.  **Refresh:** Refresh the page and see how your change affects the website's behavior (if at all). *Do not modify cookies containing financial or personal information.*
 
-## Ad Hoc Measures / Recommendations
-
-[... (Same as before) ...]
-
 **Exercise: Strong Random ID**
 
 1.  **Generate:** Use Python or another scripting language to generate a 128-bit random session ID (e.g., using `secrets.token_hex(16)` in Python).
@@ -283,18 +279,11 @@ It's often necessary to manually modify cookies or hidden fields for testing pur
 
 ## Stronger Improvements: Dynamic Links
 
-[... (Same as before) ...]
-
 **Exercise: Building Dynamic Links**
 
 1.  **Implement:** Create a simple Python script (or use a web framework) to generate dynamic links that include a session ID, timestamp, and a hash.
 2.  **Analyze:** Experiment with different hashing algorithms (e.g., SHA-256, MD5) and discuss their strengths and weaknesses.
 
-## Conclusion
-
-[... (Same as before) ...]
-
-These exercises are intended to be a starting point. Students can expand on them to explore the concepts in more depth.
 
 **Important Notes for the Exercises:**
 
