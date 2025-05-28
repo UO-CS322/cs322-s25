@@ -34,6 +34,15 @@ RESTful API examples and exercises:
 - [`Shakespeare/`](restful/Shakespeare/): Shakespearean insult generator as a RESTful API
   - [An in-class exercise to convert a small Flask application into a RESTful API](restful/Shakespeare/RESTfulExercise.md)
 
+### [`wtforms/`](wtforms/)
+Form handling and validation examples using Flask-WTF. Features:
+- Shakespearean insult generator with vocabulary management
+- Form validation and error handling
+- CSRF protection
+- Flash messages
+- Static file organization
+- [Intro to form handling in Flask using WTForms](wtforms/README.md)
+
 ### Documentation
 - [RESTNaming.md](RESTNaming.md): A guide to RESTful naming conventions
 

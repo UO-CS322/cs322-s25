@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Vocabulary Management</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  </head>
+  <body>
+    <div class="nav-links">
+      <a href="{{ url_for('index') }}">Home</a>
+      <a href="{{ url_for('insulter') }}">Generate Insult</a>
+    </div>
+
+    <h1>Vocabulary Management</h1>
+
+    {% with messages=get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-messages">
+          {% for category, message in messages %}
+            <div class="flash-message {{ category }}">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST">
+      {{ form.csrf_token }}
+      <div class="form-group">
+        {{ form.word.label }}
+        {{ form.word(class='form-control') }}
+        {% if form.word.errors %}
+          {% for error in form.word.errors %}
+            <span class="error-message">{{ error }}</span>
+          {% endfor %}
+        {% endif %}
+      </div>
+      <div class="form-group">
+        {{ form.column.label }}
+        {{ form.column(class='form-control') }}
+        {% if form.column.errors %}
+          {% for error in form.column.errors %}
+            <span class="error-message">{{ error }}</span>
+          {% endfor %}
+        {% endif %}
+      </div>
+      {{ form.submit(class='btn') }}
+    </form>
+
+    <h2>Current Vocabulary</h2>
+    <div class="vocabulary-columns">
+      <div class="vocabulary-column">
+        <h3>Column 1</h3>
+        <ul>
+          {% for word in vocab.column1 %}
+            <li>{{ word }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="vocabulary-column">
+        <h3>Column 2</h3>
+        <ul>
+          {% for word in vocab.column2 %}
+            <li>{{ word }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="vocabulary-column">
+        <h3>Column 3</h3>
+        <ul>
+          {% for word in vocab.column3 %}
+            <li>{{ word }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </body>
+</html>

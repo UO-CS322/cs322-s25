@@ -1,0 +1,66 @@
+<!--   This template handles the user registration page
+Key concepts demonstrated here:
+- Form rendering: Using WTForms template helpers
+- Error display: Showing validation errors under each field
+- Flash messages: Displaying success/error messages
+- Navigation: Links to other parts of the application
+- CSRF protection: Hidden token field for security
+- Password confirmation: Matching password fields
+  -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Register</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  </head>
+  <body>
+    <div class="nav-links">
+      <a href="{{ url_for('index') }}">Home</a>
+      <a href="{{ url_for('login') }}">Login</a>
+    </div>
+
+    <h1>Register</h1>
+
+    {% with messages=get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-messages">
+          {% for category, message in messages %}
+            <div class="flash-message {{ category }}">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST">
+      {{ form.csrf_token }}
+      <div class="form-group">
+        {{ form.username.label }}
+        {{ form.username(class='form-control') }}
+        {% if form.username.errors %}
+          {% for error in form.username.errors %}
+            <span class="error-message">{{ error }}</span>
+          {% endfor %}
+        {% endif %}
+      </div>
+      <div class="form-group">
+        {{ form.password.label }}
+        {{ form.password(class='form-control') }}
+        {% if form.password.errors %}
+          {% for error in form.password.errors %}
+            <span class="error-message">{{ error }}</span>
+          {% endfor %}
+        {% endif %}
+      </div>
+      <div class="form-group">
+        {{ form.confirm_password.label }}
+        {{ form.confirm_password(class='form-control') }}
+        {% if form.confirm_password.errors %}
+          {% for error in form.confirm_password.errors %}
+            <span class="error-message">{{ error }}</span>
+          {% endfor %}
+        {% endif %}
+      </div>
+      {{ form.submit(class='btn') }}
+    </form>
+  </body>
+</html>

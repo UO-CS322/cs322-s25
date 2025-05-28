@@ -1,11 +1,47 @@
-<!doctype html>
-    <html>
-        <head><title>Shakespearean Insult Generator</title></head>
-        <body>
-            <h1>Shakespearean Insult Generator</h1>
-            <p>{{ insult }}</p>
-            <form action="/insultme">
-                <button type="submit">Generate Another Insult</button>
-            </form>
-        </body>
-    </html>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Shakespearean Insult Generator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  </head>
+  <body>
+    <div class="nav-links">
+      {% if current_user.is_authenticated %}
+        <a href="{{ url_for('vocabulary') }}">Manage Vocabulary</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+      {% else %}
+        <a href="{{ url_for('login') }}">Login</a>
+        <a href="{{ url_for('register') }}">Register</a>
+      {% endif %}
+    </div>
+
+    <div class="insult-container">
+      <h1>Shakespearean Insult Generator</h1>
+
+      {% with messages=get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="flash-messages">
+            {% for category, message in messages %}
+              <div class="flash-message {{ category }}">{{ message }}</div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+
+      {% if insult %}
+        <div class="insult-box">
+          <p class="insult-text">{{ insult }}</p>
+        </div>
+      {% else %}
+        <div class="welcome-text">
+          <p>Welcome to the Shakespearean Insult Generator!</p>
+          <p>Click the button below to receive a proper Elizabethan insult.</p>
+        </div>
+      {% endif %}
+
+      <form action="{{ url_for('insulter') }}" class="insult-form">
+        <button type="submit" class="btn generate-btn">Generate Another Insult</button>
+      </form>
+    </div>
+  </body>
+</html>

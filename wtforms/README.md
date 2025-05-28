@@ -1,195 +1,164 @@
-# Simple Shakespearean Insult Generator using Flask
+# Shakespearean Insult Generator with WTForms
 
-We will learn the basics of Flask by creating a simple Flask app for a Shakespearean insult generator. Here's a step-by-step tutorial to get you started:
+This example demonstrates how to use Flask-WTF (WTForms) for form handling and validation in a Flask application. The application allows users to generate Shakespearean insults and manage the vocabulary used to create them.
 
-### Step 1: Set Up Your Environment
+## What you should be able to do with the new forms:
+- Visit http://localhost:7005/vocabulary
+- See the current vocabulary lists
+- Add new words to any column
+- See the updated lists after adding words
 
-First, ensure you have Python and Flask installed on your system. You can install Flask using pip, the Python package manager:
+## Learning Objectives
 
-```bash
-pip install flask
+1. Understand form handling in Flask using WTForms
+2. Implement form validation
+3. Create and use custom form classes
+4. Handle form submission and display validation errors
+5. Use flash messages for user feedback
+6. Implement CSRF protection
+
+## Project Structure
+
+```
+wtforms/
+├── app.py              # Main Flask application
+├── vocab.py           # Vocabulary data
+├── templates/
+│   ├── index.html     # Home page template
+│   └── vocabulary.html # Vocabulary management template
+└── README.md          # This file
 ```
 
-### Step 2: Create the Flask App
+## Key Concepts
 
-Create a new directory for your project and navigate into it. Create a Python file, e.g., `app.py`.
+### 1. Form Classes with WTForms
 
-### Step 3: Set Up Insult Data
-
-For simplicity, let's define the insult words directly in the `app.py` file using lists. Each list will correspond to one of the columns from the Shakespeare Insult Kit.
+WTForms provides a way to define form classes that handle form creation, validation, and rendering. Here's an example from our application:
 
 ```python
-# app.py
+from flask_wtf import FlaskForm
+from wtforms import StringField, SubmitField
+from wtforms.validators import DataRequired, Length
 
-import random
-from flask import Flask, render_template_string
-
-app = Flask(__name__)
-
-# Define the three columns of words
-column1 = ["artless", "bawdy", "beslubbering", "bootless", "churlish"]
-column2 = ["base-court", "bat-fowling", "beef-witted", "beetle-headed", "boil-brained"]
-column3 = ["apple-john", "baggage", "barnacle", "bladder", "boar-pig"]
+class VocabularyForm(FlaskForm):
+    word = StringField('Word', validators=[
+        DataRequired(),
+        Length(min=2, max=50)
+    ])
+    column = StringField('Column (1, 2, or 3)', validators=[
+        DataRequired(),
+        Length(min=1, max=1)
+    ])
+    submit = SubmitField('Add Word')
 ```
 
-### Step 4: Create the Insult Generator Function
+### 2. Form Validation
 
-Define a function that generates an insult by combining one word from each column:
+WTForms provides built-in validators and allows for custom validation:
 
+- `DataRequired()`: Ensures the field is not empty
+- `Length()`: Validates the length of the input
+- Custom validation can be added using the `validate_` prefix
+
+### 3. CSRF Protection
+
+Flask-WTF automatically handles CSRF protection. You need to:
+
+1. Set a secret key in your Flask app:
 ```python
-def generate_insult():
-    word1 = random.choice(column1)
-    word2 = random.choice(column2)
-    word3 = random.choice(column3)
-    return f"Thou {word1} {word2} {word3}!"
+app.config['SECRET_KEY'] = 'your-secret-key-here'
 ```
 
-### Step 5: Set Up Flask Routes
-
-Set up a simple route that uses this function to display a random insult when accessed.
-
-```python
-@app.route('/')
-def home():
-    insult = generate_insult()
-    # Using render_template_string for simplicity
-    html = """
-    <!doctype html>
-    <html>
-        <head><title>Shakespearean Insult Generator</title></head>
-        <body>
-            <h1>Shakespearean Insult Generator</h1>
-            <p>{{ insult }}</p>
-            <form action="/">
-                <button type="submit">Generate Another Insult</button>
-            </form>
-        </body>
-    </html>
-    """
-    return render_template_string(html, insult=insult)
-
-if __name__ == '__main__':
-    app.run(debug=True)
+2. Include the CSRF token in your forms:
+```html
+<form method="POST">
+    {{ form.csrf_token }}
+    <!-- form fields -->
+</form>
 ```
 
-### Step 6: Run Your Flask App
+### 4. Form Rendering in Templates
 
-Open a terminal, navigate to your project directory, and run the Flask app:
-
-```bash
-python app.py
-```
-
-Visit `http://127.0.0.1:5000/` in your web browser to see your Shakespearean insult generator in action. You can refresh the page or click the "Generate Another Insult" button to see different insults.
-
-### Additional Steps
-
-- **Expand Insult Lists**: Add more words to each list to make the insults even more varied and interesting.
-- **Styling**: For a more aesthetically pleasing presentation, consider integrating CSS or use a HTML template file.
-- **Deploy**: Once you've finished coding and testing locally, you could deploy the app using a cloud service (e.g., AWS, Google Cloud, etc.)
-
-This simple application demonstrates basic web application development concepts using Flask and Python. Enjoy generating classic Shakespearean insults!
-
-
-# Extending the Flask app to use an HTML template file
-
-### Step 1: Set Up Your Project Directory Structure
-
-1. Create a structure that Flask expects for templates:
-    ```
-    your_project/
-    ├── app.py
-    ├── templates/
-    │   └── index.html
-    ```
-
-### Step 2: Modify the Flask App
-
-Update your `app.py` to render an HTML template instead of using `render_template_string`.
-
-```python
-import random
-from flask import Flask, render_template
-
-app = Flask(__name__)
-
-# Define the three columns of words
-column1 = ["artless", "bawdy", "beslubbering", "bootless", "churlish"]
-column2 = ["base-court", "bat-fowling", "beef-witted", "beetle-headed", "boil-brained"]
-column3 = ["apple-john", "baggage", "barnacle", "bladder", "boar-pig"]
-
-def generate_insult():
-    word1 = random.choice(column1)
-    word2 = random.choice(column2)
-    word3 = random.choice(column3)
-    return f"Thou {word1} {word2} {word3}!"
-
-@app.route('/')
-def home():
-    insult = generate_insult()
-    return render_template('index.html', insult=insult)
-
-if __name__ == '__main__':
-    app.run(debug=True)
-```
-
-### Step 3: Create the HTML Template
-
-Create a file named `index.html` inside the `templates` directory.
+WTForms provides template helpers for rendering forms:
 
 ```html
-<!-- templates/index.html -->
-<!doctype html>
-<html>
-    <head>
-        <title>Shakespearean Insult Generator</title>
-        <style>
-            body {
-                font-family: Arial, sans-serif;
-                text-align: center;
-                margin-top: 50px;
-            }
-            h1 {
-                color: darkslateblue;
-            }
-            p {
-                font-size: 1.5em;
-                color: darkred;
-            }
-            button {
-                font-size: 1em;
-                padding: 10px 20px;
-                color: white;
-                background-color: darkslateblue;
-                border: none;
-                border-radius: 5px;
-                cursor: pointer;
-            }
-            button:hover {
-                background-color: slateblue;
-            }
-        </style>
-    </head>
-    <body>
-        <h1>Shakespearean Insult Generator</h1>
-        <p>{{ insult }}</p>
-        <form action="/">
-            <button type="submit">Generate Another Insult</button>
-        </form>
-    </body>
-</html>
+<form method="POST">
+    {{ form.csrf_token }}
+    <div class="form-group">
+        {{ form.word.label }}
+        {{ form.word(class="form-control") }}
+        {% if form.word.errors %}
+            {% for error in form.word.errors %}
+                <span style="color: red;">{{ error }}</span>
+            {% endfor %}
+        {% endif %}
+    </div>
+    {{ form.submit(class="btn") }}
+</form>
 ```
 
-### Step 4: Run the Flask App
+### 5. Flash Messages
 
-Run your Flask app using the command:
+Use flash messages to provide feedback to users:
 
+```python
+from flask import flash
+
+# In your route
+flash('Successfully added word!', 'success')
+```
+
+```html
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="flash-message {{ category }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+```
+
+## Exercises (optional)
+
+1. **Form Enhancement**
+   - Add a dropdown field for column selection instead of a text input
+   - Add a "Delete Word" feature with confirmation
+   - Implement word editing functionality
+   - Check for duplicate words in the same column (when adding)
+
+2. **Validation**
+   - Add custom validation to ensure words are unique
+   - Add validation to prevent duplicate words across columns
+   - Implement word format validation (e.g., only letters and hyphens)
+
+3. **UI Improvements**
+   - Add client-side validation using JavaScript
+   - Implement a search feature for the vocabulary
+   - Add pagination for long vocabulary lists
+
+4. **Security**
+   - Implement rate limiting for form submissions, e.g., no more than 10 words per minute
+   - Implement logging for vocabulary changes
+   - Use a database for user authentication and vocabulary storage
+
+## Running the Application
+
+1. Install dependencies:
+```bash
+pip install flask flask-wtf
+```
+
+2. Run the application:
 ```bash
 python app.py
 ```
 
-Visit `http://127.0.0.1:5000/` in your web browser to see the application with the HTML template. This version separates the Python code and HTML, making it easier to manage, especially as the application's complexity grows. The HTML file includes some basic CSS to enhance the appearance of the web page. Feel free to expand on this with more complex styling or additional functionality as needed.
+3. Visit `http://localhost:7005` in your browser
 
+## Additional Resources
 
-
-(generated with the help of GPT4o)
+- [Flask-WTF Documentation](https://flask-wtf.readthedocs.io/)
+- [WTForms Documentation](https://wtforms.readthedocs.io/)
+- [Flask Documentation](https://flask.palletsprojects.com/)
