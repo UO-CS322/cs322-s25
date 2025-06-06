@@ -46,3 +46,24 @@ Form handling and validation examples using Flask-WTF. Features:
 ### Documentation
 - [RESTNaming.md](RESTNaming.md): A guide to RESTful naming conventions
 
+### Week 10: Final Review
+
+The final review materials include:
+
+1. **Mock Interview Materials**
+   - Yellow team interview questions and guidelines
+   - Interview preparation resources
+
+2. **DRY Refactoring Exercises**
+   Located in `w10/final-review/`, these exercises demonstrate the "Don't Repeat Yourself" principle through three practical examples:
+   - Command Handler: Refactoring if-elif-else statements
+   - Number Processor: Refactoring repeated loop patterns
+   - Restaurant Rating System: Refactoring complex data processing
+
+   Each exercise includes:
+   - Original implementation with repetitive code
+   - Refactored version demonstrating DRY principles
+   - Clear examples of how to improve code maintainability
+
+   See `w10/final-review/README.md` for detailed instructions and learning objectives.
+
