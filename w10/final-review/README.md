@@ -17,8 +17,8 @@ This directory contains three exercises to practice applying the DRY principle i
 ## Exercise 2: Number Processing
 
 **Files:**
-- `DRY/numbers.py`: Original implementation with repeated loop patterns
-- `DRY/refactored/numbers.py`: Refactored example version (do not look at this until you do your own refactoring)
+- `DRY/number_processor.py`: Original implementation with repeated loop patterns
+- `DRY/refactored/number_processor.py`: Refactored example version (do not look at this until you do your own refactoring)
 
 **Tasks:**
 1. Study both implementations
